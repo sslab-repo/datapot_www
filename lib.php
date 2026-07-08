@@ -110,12 +110,17 @@ function render_header(string $active): void {
   .nav-tools:hover .nav-tools-menu { display:block; }
   /* invisible bridge so the pointer can cross the gap without the menu closing */
   .nav-tools-menu::before { content:""; position:absolute; top:0; bottom:0; left:-.6rem; width:.6rem; }
-  .nav-tools-menu a { display:block; padding:.6rem 1rem; color:var(--text);
-                       text-decoration:none; font-size:.85rem; font-weight:600; white-space:nowrap; }
-  .nav-tools-menu a:hover { background:var(--bg); color:var(--red); }
+  /* nav.sitenav prefix needed to out-rank the general "nav.sitenav a" rule,
+     which otherwise zeroes the horizontal padding */
+  nav.sitenav .nav-tools-menu a { display:block; padding:.4rem 1.6rem .4rem 1.2rem; color:var(--text);
+                       text-decoration:none; font-size:.85rem; font-weight:600; white-space:nowrap;
+                       border-bottom:0; }
+  nav.sitenav .nav-tools-menu a:hover { background:var(--bg); color:var(--red); }
 
   main { flex:1; padding:2rem 1.2rem; }
   .col { width:100%; max-width:800px; margin:0 auto; }
+  /* tools page: card hugs the embedded tool (540px iframe + card padding) */
+  body.page-tools .col { max-width:calc(540px + 4rem + 2px); }
   .card { background:var(--white); border:1px solid var(--border);
           padding:1.8rem 2rem; box-shadow:0 2px 10px rgba(0,0,0,.05); }
 
@@ -133,6 +138,15 @@ function render_header(string $active): void {
 
   .unavailable { color:var(--muted); font-style:italic; }
 
+  /* home: shortened preview with fade-out + More button */
+  .content-preview { max-height:36rem; overflow:hidden; position:relative; }
+  .content-preview::after { content:""; position:absolute; left:0; right:0; bottom:0;
+                             height:5rem; background:linear-gradient(to bottom, transparent, var(--white)); }
+  .more-btn { display:inline-block; margin-top:1rem; padding:.6rem 2.2rem;
+              background:var(--red); color:var(--white); text-decoration:none;
+              font-size:.85rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+  .more-btn:hover { background:var(--darkRed); }
+
   .post-list { list-style:none; margin:0; padding:0; }
   .post-list li { padding:1.1rem 0; border-bottom:1px solid var(--border); }
   .post-list li:last-child { border-bottom:0; }
@@ -145,14 +159,12 @@ function render_header(string $active): void {
   .back-link { display:inline-block; margin-bottom:1.2rem; color:var(--red); text-decoration:none; font-size:.85rem; font-weight:600; }
   .back-link:hover { color:var(--darkRed); }
 
-  .tool-item-head { display:flex; align-items:baseline; justify-content:space-between;
-                     gap:1rem; flex-wrap:wrap; margin-bottom:.6rem; }
-  .tool-openlink { color:var(--muted); text-decoration:none; font-size:.78rem; font-weight:600; }
-  .tool-openlink:hover { color:var(--red); }
   .tool-address { margin:0 0 .5rem; font-family:ui-monospace, monospace; font-size:.88rem; }
   .tool-address a { color:var(--red); }
   .tool-description { margin:0; line-height:1.55; color:var(--text); }
-  .tool-embed { display:block; width:100%; height:420px; border:0; background:transparent; }
+  /* width tracks drop's own layout: 500px content column + side padding */
+  .tool-embed { display:block; width:100%; max-width:540px; margin:0 auto;
+                height:420px; border:0; background:transparent; }
 
   footer { background:var(--black); color:var(--white); padding:1.4rem 1.2rem;
            font-size:.78rem; line-height:1.6; margin-top:auto; }
@@ -163,7 +175,7 @@ function render_header(string $active): void {
   .credit svg { flex-shrink:0; }
 </style>
 </head>
-<body>
+<body class="page-<?= htmlspecialchars($active) ?>">
 
 <div class="topstrip"><a href="https://www.lewisu.edu">Lewis University</a> &nbsp;·&nbsp; Security Science Lab</div>
 <div class="masthead">
@@ -230,13 +242,25 @@ function render_wp_page(string $key): void {
     ?>
   <div class="card">
     <h1 class="page-title"><?= htmlspecialchars(WP_PAGES[$key]['title']) ?></h1>
-    <div class="content">
+    <?php
+    // Shortened-preview pages: key => where the More button leads.
+    $previews = [
+        'home'         => 'https://sslab.us',
+        'about'        => WP_PAGES['about']['url'],
+        'publications' => WP_PAGES['publications']['url'],
+    ];
+    $isPreview = isset($previews[$key]);
+    ?>
+    <div class="content<?= $isPreview ? ' content-preview' : '' ?>">
     <?php if ($html !== ''): ?>
       <?= $html ?>
     <?php else: ?>
       <p class="unavailable">This content is temporarily unavailable. Please check back shortly.</p>
     <?php endif; ?>
     </div>
+    <?php if ($isPreview): ?>
+    <a class="more-btn" href="<?= htmlspecialchars($previews[$key]) ?>" target="_blank" rel="noopener">More</a>
+    <?php endif; ?>
   </div>
     <?php
     render_footer();
@@ -264,14 +288,11 @@ function render_tools(string $key): void {
     render_header('tools');
     ?>
   <div class="card">
-    <div class="tool-item-head">
-      <h1 class="page-title"><?= htmlspecialchars($tool['label']) ?></h1>
-      <a class="tool-openlink" href="<?= htmlspecialchars($tool['url']) ?>" target="_blank" rel="noopener">Open in new tab &#8599;</a>
-    </div>
     <?php if ($tool['embed']): ?>
     <iframe class="tool-embed" src="<?= htmlspecialchars($tool['url']) ?>"
             title="<?= htmlspecialchars($tool['label']) ?>" loading="lazy"></iframe>
     <?php else: ?>
+    <h1 class="page-title"><?= htmlspecialchars($tool['label']) ?></h1>
     <p class="tool-address"><a href="<?= htmlspecialchars($tool['url']) ?>"><?= htmlspecialchars($tool['url']) ?></a></p>
     <?php if ($tool['description'] !== ''): ?>
     <p class="tool-description"><?= htmlspecialchars($tool['description']) ?></p>
