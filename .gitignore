@@ -1,0 +1,6 @@
+cache/*.html
+cache/posts/*.html
+cache/posts_index.json
+
+# local-testing symlink to the drop repo; in production /drop is its own deployment
+/drop

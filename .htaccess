@@ -1,0 +1,6 @@
+# datapot_www — Apache config for shared hosting
+
+# Never serve these directly
+<FilesMatch "^(config\.php|lib\.php)$">
+  Require all denied
+</FilesMatch>
