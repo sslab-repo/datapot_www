@@ -30,16 +30,18 @@ const NAV_ITEMS = [
     ['key' => 'lab',          'label' => 'Lab Pages',      'href' => 'https://sslab.us', 'newtab' => true],
 ];
 
-// Tools — shown in the hover flyout (linking to an anchor on tools.php,
-// which is where the actual address/description for each tool lives).
-// Add new tools here; tools.php picks them up automatically.
-// 'url' must stay a relative path: the tools live on the same domain, and a
-// relative iframe src inherits the visitor's existing origin/connection —
-// an absolute https:// URL would force a second TLS negotiation, which
-// fails while the host serves its shared-platform certificate.
+// Tools — shown in the hover flyout; tools.php renders the selected one.
+// Add new tools here; the flyout and tools.php pick them up automatically.
+// Same-domain tools (like drop) must keep a relative 'url': a relative
+// iframe src inherits the visitor's existing origin/connection, while an
+// absolute https:// URL would force a second TLS negotiation, which fails
+// while the host serves its shared-platform certificate. Tools on other
+// hosts (like DMS on hopper) use their absolute URL; embedding those
+// additionally requires that host to allow framing from datapot.org.
 const TOOLS_ITEMS = [
     ['key' => 'drop', 'label' => 'Drop', 'url' => '/drop', 'description' => 'Upload a file and get a short download link to share it.', 'embed' => true],
-    ['key' => 'dms',  'label' => 'DMS',  'url' => '/dms',  'description' => '', 'embed' => false],
+    ['key' => 'dms',  'label' => 'DMS',  'url' => 'https://hopper.cs.lewisu.edu/tools/dms',
+     'description' => 'Dataset management platform — upload, search, browse, and download lab datasets with AI-generated metadata. Under development; coming soon.', 'embed' => false],
 ];
 
 const WP_CATEGORIES = [
