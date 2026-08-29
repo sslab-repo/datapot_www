@@ -39,7 +39,7 @@ const NAV_ITEMS = [
 // hosts (like DMS on hopper) use their absolute URL; embedding those
 // additionally requires that host to allow framing from datapot.org.
 const TOOLS_ITEMS = [
-    ['key' => 'drop', 'label' => 'Drop', 'url' => '/drop', 'description' => 'Upload a file and get a short download link to share it.', 'embed' => true],
+    ['key' => 'drop', 'label' => 'Drop', 'url' => '/app/drop', 'description' => 'Upload a file and get a short download link to share it.', 'embed' => true],
     ['key' => 'dms',  'label' => 'DMS',  'url' => 'https://hopper.cs.lewisu.edu/tools/dms',
      'description' => 'Dataset management platform — upload, search, browse, and download lab datasets with AI-generated metadata. Under development; coming soon.', 'embed' => false],
 ];
