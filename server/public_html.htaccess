@@ -1,0 +1,27 @@
+# ~/public_html/.htaccess  (the web docroot for datapot.org and datapot.net)
+#
+# Serve the main site from app/datapot_www WITHOUT exposing that folder in
+# the browser's address bar. This replaces the old ~/public_html/index.php,
+# which 301-redirected "/" to "/app/datapot_www/" (delete that index.php).
+#
+# Real files and directories directly under public_html (drop/, app/, ...)
+# are left untouched, so datapot.org/drop keeps working as before.
+
+RewriteEngine On
+RewriteBase /
+
+# 1) Canonicalise: if someone types the long form, send them to the short one.
+#    THE_REQUEST is the original request line, so internal rewrites below
+#    can't re-trigger this and loop.
+RewriteCond %{THE_REQUEST} ^[A-Z]+\s/app/datapot_www(/[^\s?]*)?(\?[^\s]*)?\s
+RewriteRule ^app/datapot_www(/(.*))?$ /$2 [R=301,L,NE]
+
+# 2) Site root -> the main site's index.php (transparent, URL unchanged).
+RewriteRule ^$ app/datapot_www/index.php [L]
+
+# 3) Anything else that isn't an existing file/dir in public_html is served
+#    from app/datapot_www (tools.php, posts.php, post.php?id=..., cache/...).
+RewriteCond %{REQUEST_URI} !^/app/
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
+RewriteRule ^(.*)$ app/datapot_www/$1 [L]
