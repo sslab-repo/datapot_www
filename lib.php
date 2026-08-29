@@ -32,14 +32,16 @@ const NAV_ITEMS = [
 
 // Tools — shown in the hover flyout; tools.php renders the selected one.
 // Add new tools here; the flyout and tools.php pick them up automatically.
-// Same-domain tools (like drop) must keep a relative 'url': a relative
-// iframe src inherits the visitor's existing origin/connection, while an
-// absolute https:// URL would force a second TLS negotiation, which fails
-// while the host serves its shared-platform certificate. Tools on other
-// hosts (like DMS on hopper) use their absolute URL; embedding those
-// additionally requires that host to allow framing from datapot.org.
+// This site is served from ~/public_html/app/datapot_www, while every
+// other tool lives beside it under ~/public_html/app/<name> and is only
+// reachable at https://app.datapot.org/<name> — a relative '/name' or
+// '/app/name' resolves against datapot.org and 404s. Because app.datapot.org
+// is a different origin, an embedded tool must explicitly allow framing
+// from datapot.org (drop does so with a Content-Security-Policy
+// frame-ancestors header); tools on other hosts (like DMS on hopper) need
+// the same before 'embed' can be turned on for them.
 const TOOLS_ITEMS = [
-    ['key' => 'drop', 'label' => 'Drop', 'url' => '/app/drop', 'description' => 'Upload a file and get a short download link to share it.', 'embed' => true],
+    ['key' => 'drop', 'label' => 'Drop', 'url' => 'https://app.datapot.org/drop/', 'description' => 'Upload a file and get a short download link to share it.', 'embed' => true],
     ['key' => 'dms',  'label' => 'DMS',  'url' => 'https://hopper.cs.lewisu.edu/tools/dms',
      'description' => 'Dataset management platform — upload, search, browse, and download lab datasets with AI-generated metadata. Under development; coming soon.', 'embed' => false],
 ];
