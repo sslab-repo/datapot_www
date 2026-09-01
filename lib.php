@@ -23,11 +23,8 @@ const WP_PAGES = [
 // Top nav — deliberately a fixed, curated list rather than every mirrored
 // page (career/links/contact/posts still exist and sync, just aren't linked here).
 const NAV_ITEMS = [
-    ['key' => 'home',         'label' => 'Home',           'href' => 'index.php'],
-    ['key' => 'about',        'label' => 'About Dr. Cho',  'href' => 'about.php'],
-    ['key' => 'publications', 'label' => 'Publications',   'href' => 'publications.php'],
-    ['key' => 'giving',       'label' => 'Giving',         'href' => 'giving.php'],
-    ['key' => 'lab',          'label' => 'Lab Pages',      'href' => 'https://sslab.us', 'newtab' => true],
+    ['key' => 'home', 'label' => 'Home',      'href' => 'index.php'],
+    ['key' => 'lab',  'label' => 'Lab Pages', 'href' => 'https://sslab.us', 'newtab' => true],
 ];
 
 // Tools — shown in the hover flyout; tools.php renders the selected one.
@@ -68,7 +65,7 @@ function render_header(string $active): void {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Security Science Lab | Lewis University</title>
+<title>DataPot by Security Science Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -178,10 +175,10 @@ function render_header(string $active): void {
 </head>
 <body class="page-<?= htmlspecialchars($active) ?>">
 
-<div class="topstrip"><a href="https://www.lewisu.edu">Lewis University</a> &nbsp;·&nbsp; Security Science Lab</div>
+<div class="topstrip"><a href="https://lewisu.edu" target="_blank" rel="noopener">Lewis University</a> &nbsp;·&nbsp; <a href="https://sslab.us" target="_blank" rel="noopener">Security Science Lab</a></div>
 <div class="masthead">
-  <span class="wordmark">SSLab</span>
-  <span class="appname">Security Science Lab</span>
+  <span class="wordmark">DataPot</span>
+  <span class="appname">by Security Science Lab</span>
 </div>
 <nav class="sitenav">
 <?php foreach (NAV_ITEMS as $item): ?>
@@ -230,6 +227,41 @@ function render_footer(): void {
 </body>
 </html>
 <?php
+}
+
+// Renders the static Home page — what DataPot is, the tools it hosts,
+// and the educational-purpose / acceptable-use notice. No WP mirroring.
+function render_home(): void {
+    render_header('home');
+    ?>
+  <div class="card">
+    <h1 class="page-title">Welcome to DataPot</h1>
+    <div class="content">
+      <p><strong>DataPot</strong> is the tool portal of the
+        <a href="https://sslab.us" target="_blank" rel="noopener">Security Science Lab (SSLab)</a>
+        at <a href="https://lewisu.edu" target="_blank" rel="noopener">Lewis University</a>.
+        The lab builds small, practical web tools for teaching and research, and this
+        site makes them available in one place.</p>
+
+      <h2>Tools</h2>
+      <ul>
+      <?php foreach (TOOLS_ITEMS as $tool): ?>
+        <li><a href="tools.php?tool=<?= htmlspecialchars($tool['key']) ?>"><?= htmlspecialchars($tool['label']) ?></a>
+          — <?= htmlspecialchars($tool['description']) ?></li>
+      <?php endforeach; ?>
+      </ul>
+
+      <h2>Educational purpose &amp; acceptable use</h2>
+      <p>This site is built and operated for educational purposes. Open access is
+        welcome — anyone may use the tools — but please do not attempt anything
+        prohibited by federal law.</p>
+
+      <p>Suggestions are welcome at
+        <a href="mailto:sslab@lewisu.edu">sslab@lewisu.edu</a>.</p>
+    </div>
+  </div>
+    <?php
+    render_footer();
 }
 
 // Renders a full mirrored WP page: header, title, content card, footer.
