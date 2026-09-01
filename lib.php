@@ -23,7 +23,7 @@ const WP_PAGES = [
 // Top nav — deliberately a fixed, curated list rather than every mirrored
 // page (career/links/contact/posts still exist and sync, just aren't linked here).
 const NAV_ITEMS = [
-    ['key' => 'home', 'label' => 'Home',      'href' => 'index.php'],
+    ['key' => 'home', 'label' => 'Home',      'href' => './'],
     ['key' => 'lab',  'label' => 'Lab Pages', 'href' => 'https://sslab.us', 'newtab' => true],
 ];
 
