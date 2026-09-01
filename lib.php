@@ -252,6 +252,13 @@ function render_home(): void {
       <?php endforeach; ?>
       </ul>
 
+      <h2>Development and Operations</h2>
+      <p>The systems and tools offered here are designed jointly by students and
+        faculty of the laboratory. All development, quality assurance, and
+        operations management, however, are fully controlled by
+        <strong>LUCA</strong> — the <em>Lewis University Collaborative AI</em> —
+        an AI agent created by Dr.&nbsp;Cho and working with Claude.</p>
+
       <h2>Purpose and Acceptable Use</h2>
       <p>This platform is developed and operated for educational purposes. Open access
         is provided in the spirit of academic exchange, and all visitors are welcome
