@@ -237,13 +237,14 @@ function render_home(): void {
   <div class="card">
     <h1 class="page-title">Welcome to DataPot</h1>
     <div class="content">
-      <p><strong>DataPot</strong> is the tool portal of the
+      <p><strong>DataPot</strong> is the public tool portal of the
         <a href="https://sslab.us" target="_blank" rel="noopener">Security Science Lab (SSLab)</a>
         at <a href="https://lewisu.edu" target="_blank" rel="noopener">Lewis University</a>.
-        The lab builds small, practical web tools for teaching and research, and this
-        site makes them available in one place.</p>
+        It provides a unified point of access to web-based utilities developed by the
+        laboratory in support of its instructional and research activities, spanning
+        areas such as data management, file exchange, and systems security.</p>
 
-      <h2>Tools</h2>
+      <h2>Available Tools</h2>
       <ul>
       <?php foreach (TOOLS_ITEMS as $tool): ?>
         <li><a href="tools.php?tool=<?= htmlspecialchars($tool['key']) ?>"><?= htmlspecialchars($tool['label']) ?></a>
@@ -251,12 +252,13 @@ function render_home(): void {
       <?php endforeach; ?>
       </ul>
 
-      <h2>Educational purpose &amp; acceptable use</h2>
-      <p>This site is built and operated for educational purposes. Open access is
-        welcome — anyone may use the tools — but please do not attempt anything
-        prohibited by federal law.</p>
+      <h2>Purpose and Acceptable Use</h2>
+      <p>This platform is developed and operated for educational purposes. Open access
+        is provided in the spirit of academic exchange, and all visitors are welcome
+        to make use of the tools offered here. Users are expected to act responsibly
+        and to refrain from any activity prohibited by federal law.</p>
 
-      <p>Suggestions are welcome at
+      <p>Comments and suggestions may be directed to
         <a href="mailto:sslab@lewisu.edu">sslab@lewisu.edu</a>.</p>
     </div>
   </div>
