@@ -10,6 +10,11 @@ DirectoryIndex index.php index.html
 RewriteEngine On
 RewriteBase /
 
+# 0) PHP-FPM/CGI strips the Authorization header — pass it through so
+#    drop's API can use Bearer auth.
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
 # 1) Canonicalise: if someone types the long /app/datapot_www form, send
 #    them to the short one. THE_REQUEST is the original request line, so
 #    internal rewrites below can't re-trigger this and loop.
@@ -27,7 +32,17 @@ RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# 4) Everything else is served from the main site's folder
+# 4) drop short links: /drop/Ab3xK9 -> drop/f.php?c=Ab3xK9 (legacy /drop/f/CODE
+#    too). These rules live HERE, not in drop/.htaccess, because this host
+#    returns 500 for any RewriteRule placed in that subdirectory's .htaccess
+#    while docroot-level rewrites work fine.
+RewriteRule ^drop/f/([A-Za-z0-9]+)$ drop/f.php?c=$1 [L,QSA]
+RewriteRule ^drop/([A-Za-z0-9]{4,16})$ drop/f.php?c=$1 [L,QSA]
+#    Anything else under /drop is drop's own 404 — never fall through to the
+#    main-site rewrite below.
+RewriteRule ^drop(/|$) - [L]
+
+# 5) Everything else is served from the main site's folder
 #    (tools.php, posts.php, post.php?id=..., cache/...).
 RewriteCond %{REQUEST_URI} !^/app/
 RewriteRule ^(.*)$ app/datapot_www/$1 [L]
